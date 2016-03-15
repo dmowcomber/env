@@ -22,7 +22,6 @@ short_pwd ()
   fi
 }
 
-#export short_date="$(date +%a-%H:%M)"
 short_date() {
     echo "$(date +%a-%H:%M)"
 }
