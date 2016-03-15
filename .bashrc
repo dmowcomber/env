@@ -33,6 +33,8 @@ txtylw='\e[0;33m' # Yellow
 export PS1="\$(short_date) \[\e[00;33m\]Vagrant\[\e[00m\]:\[\e[0;34m\]\$(short_pwd)\[\033[32m\]\$(parse_git_branch)\[\033[00m\] $ "
 
 alias ll='ls -laG'
+alias fd='cd ~/fortress_development/development_projects/'
+alias sgg='cd ~/fortress_development/development_projects/go/src/github.com/sendgrid'
 alias json='python -mjson.tool'
 alias go='colorgo'
 
