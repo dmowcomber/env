@@ -30,7 +30,7 @@ export CLICOLOR=1
 export GREP_OPTIONS='--color=always'
 
 txtylw='\e[0;33m' # Yellow
-export PS1="\$(short_date) \[\e[00;33m\]Vagrant\[\e[00m\]:\[\e[0;34m\]\$(short_pwd)\[\033[32m\]\$(parse_git_branch)\[\033[00m\] $ "
+export PS1="\$(short_date) \[\e[00;33m\]Vagrant2\[\e[00m\]:\[\e[0;34m\]\$(short_pwd)\[\033[32m\]\$(parse_git_branch)\[\033[00m\] $ "
 
 alias ll='ls -laG'
 alias json='python -mjson.tool'
