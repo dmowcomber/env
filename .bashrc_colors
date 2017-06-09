@@ -1,0 +1,12 @@
+# colors! (the brackets fix the terminal word wrap issue)
+
+BLUE="\\[$(tput setaf 4)\\]"
+GREEN="\\[$(tput setaf 2)\\]"
+# backgroup colors
+RED_BG="\\[$(tput setab 1)\\]"
+GREEN_BG="\\[$(tput setab 2)\\]"
+BLUE_BG="\\[$(tput setab 4)\\]"
+GREY_BG="\\[$(tput setab 7)\\]"
+# no color
+NO_COLOR="\\[$(tput sgr0)\\]"
+BOLD="\\[$(tput bold)\\]"
