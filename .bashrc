@@ -27,8 +27,11 @@ short_date() {
 }
 
 # colors! (the brackets fix the terminal word wrap issue)
-BLUE="\\[$(tput setaf 4)\\]"
+RED="\\[$(tput setaf 1)\\]"
 GREEN="\\[$(tput setaf 2)\\]"
+YELLOW="\\[$(tput setaf 3)\\]"
+BLUE="\\[$(tput setaf 4)\\]"
+GREY="\\[$(tput setaf 7)\\]"
 # backgroup colors
 RED_BG="\\[$(tput setab 1)\\]"
 BLUE_BG="\\[$(tput setab 4)\\]"
@@ -42,7 +45,8 @@ export GREP_OPTIONS='--color=always'
 export GOPATH="/Users/dustinmowcomber/fortress_development/development_projects/go"
 export GOBIN="/Users/dustinmowcomber/fortress_development/development_projects/go/bin"
 
-export PS1="$BLUE_BG\$(short_date)$NO_COLOR \$(hostname -s):$BLUE\$(short_pwd)$GREEN\$(parse_git_branch)$NO_COLOR $ "
+#export PS1="$YELLOW$BOLD\$(short_date)$NO_COLOR \$(hostname -s):$BLUE\$(short_pwd)$RED\$(parse_git_branch) $GREEN$ $NO_COLOR"
+export PS1="$YELLOW\$(short_date)$NO_COLOR \$(hostname -s):$BLUE\$(short_pwd)$RED\$(parse_git_branch) $GREEN$ $NO_COLOR"
 
 alias fd='cd ~/fortress_development/development_projects/'
 alias fv='cd ~/fortress_development/ && vagrant ssh -- -o ServerAliveInterval=120'
