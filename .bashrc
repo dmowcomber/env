@@ -40,8 +40,7 @@ export GREP_OPTIONS='--color=always'
 export GOPATH="/Users/dustinmowcomber/fortress_development/development_projects/go"
 export GOBIN="/Users/dustinmowcomber/fortress_development/development_projects/go/bin"
 
-export PS1_TIME=$BOLD'$(mytime)'$NO_COLOR
-export PS1=$PS1_TIME'`if [ $? = 0 ]; then echo "\[\e[32m\] ✔ "; else echo "\[\e[31m\] ✘ "; fi`\[\e[34m\]$(short_pwd)`[[ $(git status 2> /dev/null) =~ Changes\ to\ be\ committed: ]] && echo "\[\e[33m\]" || echo "\[\e[31m\]"``[[ ! $(git status 2> /dev/null) =~ nothing\ to\ commit,\ working\ .+\ clean ]] || echo "\[\e[32m\]"`$(parse_git_branch "(%s)\[\e[00m\]") \[\e[00m\]\$ '
+export PS1='\[\]\t\[\]`if [ $? = 0 ]; then echo "\[\e[32m\] ✔ "; else echo "\[\e[31m\] ✘ "; fi`\[\e[34m\]$(short_pwd)`[[ $(git status 2> /dev/null) =~ Changes\ to\ be\ committed: ]] && echo "\[\e[33m\]" || echo "\[\e[31m\]"``[[ ! $(git status 2> /dev/null) =~ nothing\ to\ commit,\ working\ .+\ clean ]] || echo "\[\e[32m\]"`$(parse_git_branch "(%s)\[\e[00m\]") \[\e[00m\]\$ '
 
 # Aliases
 alias json='python -mjson.tool'
