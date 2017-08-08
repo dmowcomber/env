@@ -40,7 +40,10 @@ export GREP_OPTIONS='--color=always'
 export GOPATH="/Users/dustinmowcomber/fortress_development/development_projects/go"
 export GOBIN="/Users/dustinmowcomber/fortress_development/development_projects/go/bin"
 
-export PS1='\[\]\t\[\]`if [ $? = 0 ]; then echo "\[\e[32m\] ✔ "; else echo "\[\e[31m\] ✘ "; fi`\[\e[34m\]$(short_pwd)`[[ $(git status 2> /dev/null) =~ Changes\ to\ be\ committed: ]] && echo "\[\e[33m\]" || echo "\[\e[31m\]"``[[ ! $(git status 2> /dev/null) =~ nothing\ to\ commit,\ working\ .+\ clean ]] || echo "\[\e[32m\]"`$(parse_git_branch "(%s)\[\e[00m\]") \[\e[00m\]\$ '
+## printing unicode characters in PS1 is complicated!
+## ex: \['"`tput sc`"'\]   \['"`tput rc`"'✘ \]
+## apparently unicode characters take up 3 spaces ^
+export PS1='\t`if [ $? = 0 ]; then echo "\[\e[32m\]\['"`tput sc`"'\]   \['"`tput rc`"'✔\] "; else echo "\[\e[31m\]\['"`tput sc`"'\]   \['"`tput rc`"'✘\] "; fi`\[\e[34m\]$(short_pwd)`[[ $(git status 2> /dev/null) =~ Changes\ to\ be\ committed: ]] && echo "\[\e[33m\]" || echo "\[\e[31m\]"``[[ ! $(git status 2> /dev/null) =~ nothing\ to\ commit,\ working\ .+\ clean ]] || echo "\[\e[32m\]"`$(parse_git_branch "(%s)\[\e[00m\]") \[\e[00m\]\$ '
 
 # Aliases
 alias json='python -mjson.tool'
