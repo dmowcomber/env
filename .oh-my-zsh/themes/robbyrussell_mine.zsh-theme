@@ -1,11 +1,11 @@
 local ret_status="%(?:%{$fg_bold[green]%} 🍺  :%{$fg_bold[red]%} 🔥  )"
 
-PROMPT='%{$reset_color%}$(prompt_git_color)$(git_prompt_info)%{$reset_color%}%{$fg[blue]%}$(short_pwd)${ret_status}%{$reset_color%}'
+PROMPT='%* %{$reset_color%}$(prompt_git_color)$(git_prompt_info)%{$reset_color%}%{$fg[blue]%}$(short_pwd)${ret_status}%{$reset_color%}'
 
-ZSH_THEME_GIT_PROMPT_PREFIX="" # using $(prompt_git_color) as the prefix in PROMPT
+ZSH_THEME_GIT_PROMPT_PREFIX="" # using $(prompt_git_color) as the prefix in $PROMPT
 ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%} "
-ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[red]%} ✗"
-ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg[green]%} ✔"
+ZSH_THEME_GIT_PROMPT_DIRTY=""
+ZSH_THEME_GIT_PROMPT_CLEAN=""
 
 prompt_git_color() {
   (( $+commands[git] )) || return
