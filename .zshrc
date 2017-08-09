@@ -102,10 +102,25 @@ alias json='python -mjson.tool'
 
 zstyle ':completion:*' special-dirs true
 
-# compinit
-# _comp_options+=(globdots)
 setopt globdots
 alias ls='ls -a'
 alias ll='ls -laG'
 
 alias rts='ss rts| egrep "\| rts0"'
+
+# disable zsh auto title
+DISABLE_AUTO_TITLE="true"
+
+# precmd will run before the prompt is displayed
+precmd() {
+  # set the prompt title
+  echo -ne "\033]0;${PWD##*/}/$(parse_git_branch) @$(hostname) $(date_long)\007"
+}
+
+date_long() {
+    echo "$(date +%A-%H:%M:%S)"
+}
+
+parse_git_branch() {
+  git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+}
