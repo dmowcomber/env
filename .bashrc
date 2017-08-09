@@ -99,3 +99,7 @@ fi
 if [ -f ~/.bashrc_secret ]; then
     . ~/.bashrc_secret
 fi
+
+export GIT_SSH=/usr/bin/ssh
+
+eval "$(chef shell-init bash)"
