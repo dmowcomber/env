@@ -1,6 +1,6 @@
 local ret_status="%(?:%{$fg_bold[green]%} 🍺  :%{$fg_bold[red]%} 🔥  )"
 
-PROMPT='%{$reset_color%}$(prompt_git_color)$(git_prompt_info)%{$reset_color%}%{$fg[blue]%}%c${ret_status}%{$reset_color%}'
+PROMPT='%{$reset_color%}$(prompt_git_color)$(git_prompt_info)%{$reset_color%}%{$fg[blue]%}$(short_pwd)${ret_status}%{$reset_color%}'
 
 ZSH_THEME_GIT_PROMPT_PREFIX="" # using $(prompt_git_color) as the prefix in PROMPT
 ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%} "
@@ -47,4 +47,14 @@ git_dirty() {
     STATUS=$(command git status ${FLAGS} 2> /dev/null | tail -n1)
   fi
   echo $STATUS
+}
+
+short_pwd() {
+    local pwd_length=${PROMPT_LEN-25};
+    local cur_pwd=$(echo $(pwd) | sed -e "s,^$HOME,~,");
+    if [ $(echo -n $cur_pwd | wc -c | tr -d " ") -gt $pwd_length ]; then
+        echo "...$(echo $cur_pwd | sed -e "s/.*\(.\{$pwd_length\}\)/\1/")";
+    else
+        echo $cur_pwd;
+    fi
 }
