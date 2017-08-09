@@ -12,9 +12,8 @@ fi
 parse_git_branch() {
   git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
 }
-short_pwd ()
-{
-    local pwd_length=${PROMPT_LEN-35};
+short_pwd() {
+    local pwd_length=${PROMPT_LEN-25};
     local cur_pwd=$(echo $(pwd) | sed -e "s,^$HOME,~,");
     if [ $(echo -n $cur_pwd | wc -c | tr -d " ") -gt $pwd_length ]; then
         echo "...$(echo $cur_pwd | sed -e "s/.*\(.\{$pwd_length\}\)/\1/")";
@@ -22,6 +21,7 @@ short_pwd ()
         echo $cur_pwd;
     fi
 }
+
 mytime() {
     echo "$(date +%H:%M:%S)"
 }
@@ -33,6 +33,35 @@ date_long() {
 }
 code() {
     /Applications/Visual\ Studio\ Code.app/Contents/MacOS/Electron $1 &
+}
+
+# dcstats and dtop have mostly the same output
+dcstats() {
+    # docker stats using docker-compose
+    docker-compose ps | grep Up | awk '{print $1}' | xargs docker stats
+}
+dtop() {
+    # docker stats formatted the way I like it with optional args
+    docker stats --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.MemPerc}}\t{{.NetIO}}\t{{.BlockIO}}\t{{.PIDs}}\t{{.Container}}" "$@"
+    # docker stats docs https://docs.docker.com/engine/reference/commandline/stats/
+}
+dbuild() {
+    docker build -t docker.sendgrid.net/sendgrid/${PWD##*/} .
+}
+dc() {
+    # ex: dc logs -f
+    docker-compose "$@"
+}
+dcupdev() {
+    # ex: dcupdev -d --no-dep chaos
+    docker-compose -f docker-compose.yml -f docker-compose.dev.yml up "$@"
+}
+r() { refresh; }
+refresh() {
+    . ~/.bashrc
+}
+deploy() {
+	~/deploy.sh "$@"
 }
 
 export CLICOLOR=1
@@ -51,6 +80,8 @@ alias less='less -R'
 alias ll='ls -laG'
 # search brew for go versions
 alias goversions='brew search /^go\(@.*\)$/'
+
+alias rts='ss rts| egrep "\| rts0"'
 
 if [ -f ~/.git-completion.bash ]; then
     . ~/.git-completion.bash

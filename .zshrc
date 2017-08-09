@@ -107,3 +107,5 @@ zstyle ':completion:*' special-dirs true
 setopt globdots
 alias ls='ls -a'
 alias ll='ls -laG'
+
+alias rts='ss rts| egrep "\| rts0"'
