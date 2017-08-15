@@ -1,0 +1,22 @@
+[url "git@github.com:"]
+	insteadOf = https://github.com/
+[user]
+[user]
+	name = Dustin Mowcomber
+	email = dustin.mowcomber@sendgrid.com
+	initials = dm
+[alias]
+    st = status
+    co = checkout
+    br = branch
+[core]
+	excludesfile = /Users/dustinmowcomber/.gitignore_global
+	editor = /usr/bin/vim
+[push]
+	default = simple
+[diff]
+	submodule = log
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	required = true
