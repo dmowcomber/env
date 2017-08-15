@@ -2,7 +2,7 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/dustinmowcomber/.oh-my-zsh
+export ZSH=$HOME/.oh-my-zsh
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
@@ -129,8 +129,8 @@ deploy() {
   ~/deploy.sh "$@"
 }
 
-export GOPATH="/Users/dustinmowcomber/fortress_development/development_projects/go"
-export GOBIN="/Users/dustinmowcomber/fortress_development/development_projects/go/bin"
+export GOPATH="$HOME/fortress_development/development_projects/go"
+export GOBIN="$HOME/fortress_development/development_projects/go/bin"
 
 PATH="/Library/Frameworks/Python.framework/Versions/2.7/bin:${GOPATH}/bin:/Applications/Postgres.app/Contents/Versions/9.5/bin:${PATH}"
 export PATH

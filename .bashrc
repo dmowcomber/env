@@ -66,8 +66,8 @@ deploy() {
 
 export CLICOLOR=1
 export GREP_OPTIONS='--color=always'
-export GOPATH="/Users/dustinmowcomber/fortress_development/development_projects/go"
-export GOBIN="/Users/dustinmowcomber/fortress_development/development_projects/go/bin"
+export GOPATH="$HOME/fortress_development/development_projects/go"
+export GOBIN="$HOME/fortress_development/development_projects/go/bin"
 
 ## printing unicode characters in PS1 is complicated!
 ## ex: \['"`tput sc`"'\]   \['"`tput rc`"'✘ \]
