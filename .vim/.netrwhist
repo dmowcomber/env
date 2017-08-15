@@ -1,0 +1,9 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =7
+let g:netrw_dirhist_1='/Users/dustinmowcomber/repos/chef-data/environments/common/production'
+let g:netrw_dirhist_2='/Users/dustinmowcomber/repos/chef-data/environments/common'
+let g:netrw_dirhist_3='/Users/dustinmowcomber/repos/sitetestui/environments'
+let g:netrw_dirhist_4='/Users/dustinmowcomber'
+let g:netrw_dirhist_5='/Users/dustinmowcomber/fortress_development/development_projects/go/src/github.com/sendgrid/chaos/swagger-ui'
+let g:netrw_dirhist_6='/Users/dustinmowcomber/fortress_development/development_projects/go/src/github.com/sendgrid/email_activity_consumer/.git'
+let g:netrw_dirhist_7='/Users/dustinmowcomber/.ssh'
