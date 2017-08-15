@@ -124,3 +124,16 @@ date_long() {
 parse_git_branch() {
   git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
 }
+
+deploy() {
+  ~/deploy.sh "$@"
+}
+
+export GOPATH="/Users/dustinmowcomber/fortress_development/development_projects/go"
+export GOBIN="/Users/dustinmowcomber/fortress_development/development_projects/go/bin"
+
+PATH="/Library/Frameworks/Python.framework/Versions/2.7/bin:${GOPATH}/bin:/Applications/Postgres.app/Contents/Versions/9.5/bin:${PATH}"
+export PATH
+
+unsetopt share_history
+
