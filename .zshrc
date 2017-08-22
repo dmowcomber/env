@@ -92,6 +92,10 @@ source $ZSH/oh-my-zsh.sh
 if [ -f ~/.bashrc_work ]; then
     . ~/.bashrc_work
 fi
+# include secret keys stuff
+if [ -f ~/.bashrc_secret ]; then
+    . ~/.bashrc_secret
+fi
 
 r() { refresh; }
 refresh() {
