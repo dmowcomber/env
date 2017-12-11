@@ -102,4 +102,6 @@ fi
 
 export GIT_SSH=/usr/bin/ssh
 
-eval "$(chef shell-init bash)"
+if hash chef 2>/dev/null; then
+	eval "$(chef shell-init bash)"
+fi
