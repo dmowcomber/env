@@ -12,7 +12,7 @@ unlink /usr/local/bin/subl
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-ln -s $DIR/bashrc ~/.bashrc
+ln -s $DIR/.bashrc ~/.bashrc
 ln -s $DIR/.zshrc ~/.zshrc
 ln -s $DIR/.vimrc ~/.vimrc
 ln -s $DIR/.vim ~/.vim
