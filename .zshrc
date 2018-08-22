@@ -111,6 +111,10 @@ alias ls='ls -a'
 alias ll='ls -laG'
 
 alias rts='ss rts| egrep "\| rts0"'
+alias dc='docker-compose'
+
+alias now="gdate +'%Y-%m-%d %H:%M %p'"
+alias utc="TZ=UTC gdate +'%Y-%m-%d %H:%M %p'"
 
 # disable zsh auto title
 DISABLE_AUTO_TITLE="true"
@@ -126,8 +130,17 @@ date_long() {
 }
 
 parse_git_branch() {
-  git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+	git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
 }
+git_current_branch() {
+	git branch | grep \* | cut -d ' ' -f2
+}
+git_track() {
+	git branch -vv
+	git branch -u origin/`git_current_branch`
+	git branch -vv
+}
+alias gt='git_track'
 
 deploy() {
   ~/deploy.sh "$@"
