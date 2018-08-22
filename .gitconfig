@@ -7,8 +7,11 @@
 	initials = dm
 [alias]
     st = status
+    s = status
     co = checkout
     br = branch
+    d = diff
+    dc = diff --cached
 [core]
 	excludesfile = /Users/dustinmowcomber/.gitignore_global
 	editor = /usr/bin/vim

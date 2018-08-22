@@ -136,9 +136,9 @@ git_current_branch() {
 	git branch | grep \* | cut -d ' ' -f2
 }
 git_track() {
-	git branch -vv
-	git branch -u origin/`git_current_branch`
-	git branch -vv
+  git branch -vv | grep `git_current_branch`
+  git branch -u origin/`git_current_branch`
+  git branch -vv | grep `git_current_branch`
 }
 alias gt='git_track'
 
