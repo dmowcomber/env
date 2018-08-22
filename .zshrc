@@ -122,7 +122,7 @@ DISABLE_AUTO_TITLE="true"
 # precmd will run before the prompt is displayed
 precmd() {
   # set the prompt title
-  echo -ne "\033]0;${PWD##*/}/$(parse_git_branch) @$(hostname) $(date_long)\007"
+  echo -ne "\033]0;$(hostname):${PWD##*/}/$(parse_git_branch) $(date_long)\007"
 }
 
 date_long() {

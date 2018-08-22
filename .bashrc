@@ -87,7 +87,7 @@ if [ -f ~/.git-completion.bash ]; then
     . ~/.git-completion.bash
 fi
 
-export PROMPT_COMMAND="echo -ne \"\033]0;\${PWD##*/}/\$(parse_git_branch) @\${HOSTNAME} \$(date_long)\007\""
+export PROMPT_COMMAND="echo -ne \"\033]0;\${HOSTNAME}:\${PWD##*/}/\$(parse_git_branch) \$(date_long)\007\""
 
 export EDITOR=vim
 
@@ -102,4 +102,6 @@ fi
 
 export GIT_SSH=/usr/bin/ssh
 
-eval "$(chef shell-init bash)"
+if hash chef 2>/dev/null; then
+	eval "$(chef shell-init bash)"
+fi
