@@ -13,9 +13,9 @@ prompt_git_color() {
   if $(git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
     dirty=$(git_dirty)
     if [[ -n $dirty ]]; then
-      prompt_segment black yellow
+      prompt_segment NONE yellow
     else
-      prompt_segment black green
+      prompt_segment NONE green
     fi
   fi
 }
