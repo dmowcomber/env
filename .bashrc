@@ -81,7 +81,10 @@ alias ll='ls -laG'
 # search brew for go versions
 alias goversions='brew search /^go\(@.*\)$/'
 
-alias rts='ss rts| egrep "\| rts0"'
+alias dc='docker-compose'
+alias now="gdate +'%Y-%m-%d %H:%M %p'"
+alias utc="TZ=UTC gdate +'%Y-%m-%d %H:%M %p'"
+alias atom='echo running atom with go mod disabled because it slows down go to definition; echo GO111MODULE=off; GO111MODULE=off /Applications/Atom.app/Contents/MacOS/Atom'
 
 if [ -f ~/.git-completion.bash ]; then
     . ~/.git-completion.bash

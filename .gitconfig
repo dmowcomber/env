@@ -13,7 +13,7 @@
     d = diff
     dc = diff --cached
 [core]
-	excludesfile = /Users/dustinmowcomber/.gitignore_global
+	excludesfile = /Users/dmowcomber/.gitignore_global
 	editor = /usr/bin/vim
 [push]
 	default = simple

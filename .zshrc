@@ -149,7 +149,11 @@ deploy() {
 export GOPATH="$HOME/go"
 export GOBIN="$GOPATH/bin"
 
-PATH="/Library/Frameworks/Python.framework/Versions/2.7/bin:${GOPATH}/bin:/Applications/Postgres.app/Contents/Versions/9.5/bin:${PATH}"
+PATH="$HOME/Library/Python/3.6/bin:$HOME/.rbenv/shims:$HOME/.rbenv/bin:$HOME/.gem/ruby/2.1.0/bin:/Library/Frameworks/Python.framework/Versions/2.7/bin:${GOPATH}/bin:/Applications/Postgres.app/Contents/Versions/9.5/bin:${PATH}:$HOME/.gem/ruby/2.0.0/bin"
+# add flamegraph script for pprof flame graphs!
+PATH="$GOPATH/go/src/github.com/uber/go-torch/FlameGraph:$PATH"
+# add custom env scripts
+PATH=$HOME/env/scripts:$PATH
 export PATH
 
 unsetopt share_history
