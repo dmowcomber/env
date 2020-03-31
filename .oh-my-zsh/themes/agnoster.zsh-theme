@@ -80,7 +80,7 @@ prompt_end() {
 # Context: user@hostname (who am I and where am I)
 prompt_context() {
   if [[ "$USER" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
-    prompt_segment black default "%(!.%{%F{yellow}%}.)$USER@%m"
+    prompt_segment black default "%(!.%{%F{yellow}%}.)$USER"
   fi
 }
 
@@ -190,6 +190,16 @@ prompt_dir() {
   prompt_segment blue black '%~'
 }
 
+prompt_short_dir() {
+    local pwd_length=${PROMPT_LEN-25};
+    local dir=$(echo $(pwd) | sed -e "s,^$HOME,~,");
+    if [ $(echo -n $dir | wc -c | tr -d " ") -gt $pwd_length ]; then
+        dir="...$(echo $dir | sed -e "s/.*\(.\{$pwd_length\}\)/\1/")";
+    fi
+
+    prompt_segment blue black $dir
+}
+
 # Virtualenv: current working virtualenv
 prompt_virtualenv() {
   local virtualenv_path="$VIRTUAL_ENV"
@@ -205,24 +215,55 @@ prompt_virtualenv() {
 prompt_status() {
   local symbols
   symbols=()
-  [[ $RETVAL -ne 0 ]] && symbols+="%{%F{red}%}✘"
-  [[ $UID -eq 0 ]] && symbols+="%{%F{yellow}%}⚡"
+  [[ $RETVAL -ne 0 ]] && symbols+="🔥" || symbols+="🥃"
+  # [[ $UID -eq 0 ]] && symbols+="%{%F{yellow}%}⚡"
   [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="%{%F{cyan}%}⚙"
 
   [[ -n "$symbols" ]] && prompt_segment black default "$symbols"
+}
+
+prompt_time() {
+  prompt_segment white black "%*"
 }
 
 ## Main prompt
 build_prompt() {
   RETVAL=$?
   prompt_status
+  prompt_time
   prompt_virtualenv
   prompt_context
   prompt_dir
   prompt_git
+  prompt_short_dir
   prompt_bzr
   prompt_hg
   prompt_end
 }
+
+
+autoload -U colors; colors
+
+kp() { kubectl_prompt "$@"; }
+kubectl_prompt() {
+  enable=$1
+  if  [[ $enable == "on" ]]; then
+    echo "enabling kubectl prompt"
+    enable_kubectl_prompt
+    return
+  fi
+  echo "disabling kubectl prompt"
+  disable_kubectl_prompt
+}
+
+disable_kubectl_prompt() {
+  RPS1=''
+}
+
+enable_kubectl_prompt() {
+  source ~/env/zsh-kubectl-prompt/kubectl.zsh && RPS1='%{$fg[blue]%}($ZSH_KUBECTL_PROMPT)%{$reset_color%}'
+}
+
+enable_kubectl_prompt
 
 PROMPT='%{%f%b%k%}$(build_prompt) '
