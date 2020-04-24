@@ -78,11 +78,11 @@ prompt_end() {
 # Each component will draw itself, and hide itself if no information needs to be shown
 
 # Context: user@hostname (who am I and where am I)
-prompt_context() {
-  if [[ "$USER" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
-    prompt_segment black default "%(!.%{%F{yellow}%}.)$USER"
-  fi
-}
+# prompt_context() {
+#   if [[ "$USER" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
+#     prompt_segment black default "%(!.%{%F{yellow}%}.)$USER"
+#   fi
+# }
 
 # Git: branch/detached head, dirty status
 prompt_git() {
@@ -127,63 +127,63 @@ prompt_git() {
   fi
 }
 
-prompt_bzr() {
-    (( $+commands[bzr] )) || return
-    if (bzr status >/dev/null 2>&1); then
-        status_mod=`bzr status | head -n1 | grep "modified" | wc -m`
-        status_all=`bzr status | head -n1 | wc -m`
-        revision=`bzr log | head -n2 | tail -n1 | sed 's/^revno: //'`
-        if [[ $status_mod -gt 0 ]] ; then
-            prompt_segment yellow black
-            echo -n "bzr@"$revision "✚ "
-        else
-            if [[ $status_all -gt 0 ]] ; then
-                prompt_segment yellow black
-                echo -n "bzr@"$revision
+# prompt_bzr() {
+#     (( $+commands[bzr] )) || return
+#     if (bzr status >/dev/null 2>&1); then
+#         status_mod=`bzr status | head -n1 | grep "modified" | wc -m`
+#         status_all=`bzr status | head -n1 | wc -m`
+#         revision=`bzr log | head -n2 | tail -n1 | sed 's/^revno: //'`
+#         if [[ $status_mod -gt 0 ]] ; then
+#             prompt_segment yellow black
+#             echo -n "bzr@"$revision "✚ "
+#         else
+#             if [[ $status_all -gt 0 ]] ; then
+#                 prompt_segment yellow black
+#                 echo -n "bzr@"$revision
+#
+#             else
+#                 prompt_segment green black
+#                 echo -n "bzr@"$revision
+#             fi
+#         fi
+#     fi
+# }
 
-            else
-                prompt_segment green black
-                echo -n "bzr@"$revision
-            fi
-        fi
-    fi
-}
-
-prompt_hg() {
-  (( $+commands[hg] )) || return
-  local rev status
-  if $(hg id >/dev/null 2>&1); then
-    if $(hg prompt >/dev/null 2>&1); then
-      if [[ $(hg prompt "{status|unknown}") = "?" ]]; then
-        # if files are not added
-        prompt_segment red white
-        st='±'
-      elif [[ -n $(hg prompt "{status|modified}") ]]; then
-        # if any modification
-        prompt_segment yellow black
-        st='±'
-      else
-        # if working copy is clean
-        prompt_segment green black
-      fi
-      echo -n $(hg prompt "☿ {rev}@{branch}") $st
-    else
-      st=""
-      rev=$(hg id -n 2>/dev/null | sed 's/[^-0-9]//g')
-      branch=$(hg id -b 2>/dev/null)
-      if `hg st | grep -q "^\?"`; then
-        prompt_segment red black
-        st='±'
-      elif `hg st | grep -q "^[MA]"`; then
-        prompt_segment yellow black
-        st='±'
-      else
-        prompt_segment green black
-      fi
-      echo -n "☿ $rev@$branch" $st
-    fi
-  fi
-}
+# prompt_hg() {
+#   (( $+commands[hg] )) || return
+#   local rev status
+#   if $(hg id >/dev/null 2>&1); then
+#     if $(hg prompt >/dev/null 2>&1); then
+#       if [[ $(hg prompt "{status|unknown}") = "?" ]]; then
+#         # if files are not added
+#         prompt_segment red white
+#         st='±'
+#       elif [[ -n $(hg prompt "{status|modified}") ]]; then
+#         # if any modification
+#         prompt_segment yellow black
+#         st='±'
+#       else
+#         # if working copy is clean
+#         prompt_segment green black
+#       fi
+#       echo -n $(hg prompt "☿ {rev}@{branch}") $st
+#     else
+#       st=""
+#       rev=$(hg id -n 2>/dev/null | sed 's/[^-0-9]//g')
+#       branch=$(hg id -b 2>/dev/null)
+#       if `hg st | grep -q "^\?"`; then
+#         prompt_segment red black
+#         st='±'
+#       elif `hg st | grep -q "^[MA]"`; then
+#         prompt_segment yellow black
+#         st='±'
+#       else
+#         prompt_segment green black
+#       fi
+#       echo -n "☿ $rev@$branch" $st
+#     fi
+#   fi
+# }
 
 # Dir: current working directory
 prompt_dir() {
@@ -231,16 +231,17 @@ build_prompt() {
   RETVAL=$?
   prompt_status
   prompt_time
-  prompt_virtualenv
-  prompt_context
-  prompt_dir
+  # prompt_virtualenv
+
+  # ignore this one because I know who I am
+  # prompt_context
+  # prompt_dir
   prompt_git
   prompt_short_dir
-  prompt_bzr
-  prompt_hg
+  # prompt_bzr
+  # prompt_hg
   prompt_end
 }
-
 
 autoload -U colors; colors
 
@@ -264,6 +265,6 @@ enable_kubectl_prompt() {
   source ~/env/zsh-kubectl-prompt/kubectl.zsh && RPS1='%{$fg[blue]%}($ZSH_KUBECTL_PROMPT)%{$reset_color%}'
 }
 
-enable_kubectl_prompt
+# enable_kubectl_prompt
 
 PROMPT='%{%f%b%k%}$(build_prompt) '
