@@ -1,100 +1,15 @@
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
-
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 
-# Set name of the theme to load. Optionally, if you set this to "random"
-# it'll load a random theme each time that oh-my-zsh is loaded.
-# See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
+# ZSH_THEME="agnoster" # not using a theme anymore.. using powerline-go https://github.com/dmowcomber/powerline-go
 
-# agnoster theme requires powerline fonts
-ZSH_THEME="agnoster"
-# ZSH_THEME="robbyrussell_mine"
-
-
-# Uncomment the following line to use case-sensitive completion.
-# CASE_SENSITIVE="true"
-
-# Uncomment the following line to use hyphen-insensitive completion. Case
-# sensitive completion must be off. _ and - will be interchangeable.
-# HYPHEN_INSENSITIVE="true"
-
-# Uncomment the following line to disable bi-weekly auto-update checks.
-# DISABLE_AUTO_UPDATE="true"
-
-# Uncomment the following line to change how often to auto-update (in days).
-# export UPDATE_ZSH_DAYS=13
-
-# Uncomment the following line to disable colors in ls.
-# DISABLE_LS_COLORS="true"
-
-# Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
-
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-# COMPLETION_WAITING_DOTS="true"
-
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-# The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# HIST_STAMPS="mm/dd/yyyy"
-
-# Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
-
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
 plugins=(git kubectl)
 
 source $ZSH/oh-my-zsh.sh
 
-# User configuration
-
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
-
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
-
-# ssh
-# export SSH_KEY_PATH="~/.ssh/rsa_id"
-
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-
-###
-### user definitions:
-###
-
 # include work stuff
-if [ -f ~/.bashrc_work ]; then
-    . ~/.bashrc_work
+if [ -f ~/.zshrc_work ]; then
+    . ~/.zshrc_work
 fi
 # include secret keys stuff
 if [ -f ~/.bashrc_secret ]; then
@@ -103,22 +18,134 @@ fi
 
 r() { refresh; }
 refresh() {
+    REFRESH=true
     . ~/.zshrc
 }
 
-alias json='python -mjson.tool'
+kexec() {
+  kubectl exec -it `anypod -a $1 -s $2` -- sh
+}
+
+anypodUsage() {
+  echo "-a App (required)"
+  echo "-s Search (optional)"
+}
+
+dcr() { dcrmup "$@"; }
+dcrmup() {
+	export service=$1
+	dc kill $service && dc rm -f $service && dc up -d --no-deps $service
+}
+
+kgp() { kg pods $@; }
+kgd() { kg deployments $@; }
+
+kg() {
+   resource=$1
+   appSelector="app=$2"
+   if  [[ -z $1 ]]; then
+     echo "must specify resource. example: kg pods"
+     exit 1
+   fi
+   if  [[ -z $2 ]]; then
+     appSelector=""
+   fi
+
+   kubectl get $resource --selector=$appSelector
+}
+
+pv() { kgpv "$@"; }
+kgpv() {
+  appSelector="app=$1"
+  if  [[ -z $1 ]]; then
+    appSelector=""
+  fi
+
+  kubectl get pods --selector=$appSelector -o "custom-columns=:.metadata.namespace,:.metadata.name,:.spec.containers[*].image,:.status.containerStatuses[*].ready, :.status.containerStatuses[*].state.running"
+}
+
+kgpn() { kgpname "$@"; }
+kgpname() {
+  kgp $1 | awk '{ if ( NR > 1  ) { print } }' | awk '{print $1}'
+}
+
+kee() { kexeceach "$@"; }
+kexeceach() {
+  app=$1
+  command=$2
+  kgpname $app | xargs -I {} echo "kubectl exec {} -- $command" | sh
+}
+
+anypod() {
+  # echo "1: $1"
+  argsLen=`echo "$1" | awk '{print length}'`
+  # echo "argsLen: $argsLen"
+
+  if  [[ -z $1 ]] || [ "$argsLen" -lt "2" ] || [ ${1:0:1} != "-" ]; then
+    anypodUsage
+    return
+  fi
+
+  while getopts ":a:s:" opt; do
+    # echo "opt: $opt"
+    case $opt in
+      a)
+        # echo "-$opt was triggered, Parameter: $OPTARG" >&2
+        app=$OPTARG
+        continue
+        ;;
+      s)
+        # echo "-$opt was triggered, Parameter: $OPTARG" >&2
+        search=$OPTARG
+        continue
+        ;;
+      \?)
+        echo "Invalid option: -$OPTARG" >&2
+        return
+        ;;
+      :)
+        echo "Option -$OPTARG requires an argument." >&2
+        return
+        ;;
+    esac
+  done
+
+  pods=`kubectl get pods -l app="$app" -ojsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}'`
+
+  if [ -z $search ]; then
+    # $search is not set
+    # use the exiting list of pods
+    podSearchResults=$pods
+  else
+    # $search is set
+    # grep the pods
+    podSearchResults=`echo $pods | egrep "$search" | sed $'s,\x1b\\[[0-9;]*[a-zA-Z],,g'`
+  fi
+
+  echo $podSearchResults | tail -1
+}
+
+alias atom='echo running atom with go mod disabled because it slows down go to definition; echo GO111MODULE=off; GO111MODULE=off /Applications/Atom.app/Contents/MacOS/Atom'
+# jq . sometimes adds extra indentation. the following fixes that somehow
+alias jq='jq -c .| jq'
 
 zstyle ':completion:*' special-dirs true
 
 setopt globdots
 alias ls='ls -a'
 alias ll='ls -laG'
+alias goversions='brew search /^go\(@.*\)$/'
 
-alias rts='ss rts| egrep "\| rts0"'
+alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
 alias dc='docker-compose'
+alias bs='git branch-select'
 
 alias now="gdate +'%Y-%m-%d %H:%M %p'"
 alias utc="TZ=UTC gdate +'%Y-%m-%d %H:%M %p'"
+
+alias gb='git branch --sort=committerdate'
+
+alias k='kubectl'
 
 # disable zsh auto title
 DISABLE_AUTO_TITLE="true"
@@ -146,18 +173,90 @@ git_track() {
 }
 alias gt='git_track'
 
-deploy() {
-  ~/deploy.sh "$@"
+git_push_upstream() {
+  git branch -vv | grep `git_current_branch`
+  git push -u origin `git_current_branch`
+  git branch -vv | grep `git_current_branch`
 }
+alias gpu='git_push_upstream'
+alias dockerips="docker ps -q | xargs -n 1 docker inspect --format '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}} {{ .Name }}' | sed 's/ \// /'"
 
 export GOPATH="$HOME/go"
 export GOBIN="$GOPATH/bin"
+export GO111MODULE='auto'
 
 PATH="$HOME/Library/Python/3.6/bin:$HOME/.rbenv/shims:$HOME/.rbenv/bin:$HOME/.gem/ruby/2.1.0/bin:/Library/Frameworks/Python.framework/Versions/2.7/bin:${GOPATH}/bin:/Applications/Postgres.app/Contents/Versions/9.5/bin:${PATH}:$HOME/.gem/ruby/2.0.0/bin"
 # add flamegraph script for pprof flame graphs!
-PATH="$GOPATH/go/src/github.com/uber/go-torch/FlameGraph:$PATH"
-# add custom env scripts
-PATH=$HOME/env/scripts:$PATH
+PATH="$GOPATH/go/src/github.com/uber/go-torch/FlameGraph:/usr/local/opt/go/libexec/bin:$PATH"
 export PATH
 
 unsetopt share_history
+HISTFILE=~/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
+setopt appendhistory
+
+export CLICOLOR=1
+export GREP_OPTIONS='--color=always'
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
+# fix issue with missing carriage return
+stty sane
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+
+kp() { kubectl_prompt "$@"; }
+kubectl_prompt() {
+  enable=$1
+  if  [[ $enable == "on" ]]; then
+    echo "enabling kubectl prompt"
+    enable_kubectl_prompt
+    return
+  fi
+  echo "disabling kubectl prompt"
+  disable_kubectl_prompt
+}
+
+disable_kubectl_prompt() {
+  RPS1=''
+}
+
+enable_kubectl_prompt() {
+  source ~/env/zsh-kubectl-prompt/kubectl.zsh && RPS1='%{$fg[blue]%}($ZSH_KUBECTL_PROMPT)%{$reset_color%}'
+}
+
+# enable_kubectl_prompt
+
+# powerline-go (this override the theme set way above)
+function powerline_precmd() {
+  exit_code=$?
+  # -modules string
+  #     The list of modules to load, separated by ','
+  #     (valid choices: aws, cwd, docker, docker-context, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)
+  #     (default "venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root")
+
+  gitmodule="git"
+  # if [ -n "$TMUX" ]; then
+  #   gitmodule="gitlite"
+  # fi
+  PS1="$($GOPATH/bin/powerline-go -error $exit_code -shell zsh -hostname-only-if-ssh -modules "time,docker,$gitmodule,host,ssh,cwd,perms,hg,jobs,exit,root")"
+}
+
+function install_powerline_precmd() {
+  for s in "${precmd_functions[@]}"; do
+    if [ "$s" = "powerline_precmd" ]; then
+      return
+    fi
+  done
+  precmd_functions+=(powerline_precmd)
+}
+
+if [ "$TERM" != "linux" ]; then
+    install_powerline_precmd
+fi
+
+# if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ] && [ -z "$REFRESH" ]; then
+#   exec tmux
+# fi

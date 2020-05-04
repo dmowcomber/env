@@ -74,16 +74,6 @@ prompt_end() {
   CURRENT_BG=''
 }
 
-### Prompt components
-# Each component will draw itself, and hide itself if no information needs to be shown
-
-# Context: user@hostname (who am I and where am I)
-# prompt_context() {
-#   if [[ "$USER" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
-#     prompt_segment black default "%(!.%{%F{yellow}%}.)$USER"
-#   fi
-# }
-
 # Git: branch/detached head, dirty status
 prompt_git() {
   (( $+commands[git] )) || return
@@ -96,13 +86,7 @@ prompt_git() {
   repo_path=$(git rev-parse --git-dir 2>/dev/null)
 
   if $(git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
-    dirty=$(parse_git_dirty)
     ref=$(git symbolic-ref HEAD 2> /dev/null) || ref="➦ $(git rev-parse --short HEAD 2> /dev/null)"
-    if [[ -n $dirty ]]; then
-      prompt_segment yellow black
-    else
-      prompt_segment green black
-    fi
 
     if [[ -e "${repo_path}/BISECT_LOG" ]]; then
       mode=" <B>"
@@ -110,6 +94,13 @@ prompt_git() {
       mode=" >M<"
     elif [[ -e "${repo_path}/rebase" || -e "${repo_path}/rebase-apply" || -e "${repo_path}/rebase-merge" || -e "${repo_path}/../.dotest" ]]; then
       mode=" >R>"
+    fi
+
+    gitBG=green
+    gitDiff=$(git diff --quiet 2> /dev/null)
+    gitStatus=$(git status -s 2> /dev/null)
+    if [[ $gitDiff != '' || $gitStatus != '' ]]; then
+      gitBG=yellow
     fi
 
     setopt promptsubst
@@ -123,71 +114,11 @@ prompt_git() {
     zstyle ':vcs_info:*' formats ' %u%c'
     zstyle ':vcs_info:*' actionformats ' %u%c'
     vcs_info
-    echo -n "${ref/refs\/heads\//$PL_BRANCH_CHAR }${vcs_info_msg_0_%% }${mode}"
+
+    gitInfo="${ref/refs\/heads\//$PL_BRANCH_CHAR }${vcs_info_msg_0_%% }${mode}"
+
+    prompt_segment $gitBG black $gitInfo
   fi
-}
-
-# prompt_bzr() {
-#     (( $+commands[bzr] )) || return
-#     if (bzr status >/dev/null 2>&1); then
-#         status_mod=`bzr status | head -n1 | grep "modified" | wc -m`
-#         status_all=`bzr status | head -n1 | wc -m`
-#         revision=`bzr log | head -n2 | tail -n1 | sed 's/^revno: //'`
-#         if [[ $status_mod -gt 0 ]] ; then
-#             prompt_segment yellow black
-#             echo -n "bzr@"$revision "✚ "
-#         else
-#             if [[ $status_all -gt 0 ]] ; then
-#                 prompt_segment yellow black
-#                 echo -n "bzr@"$revision
-#
-#             else
-#                 prompt_segment green black
-#                 echo -n "bzr@"$revision
-#             fi
-#         fi
-#     fi
-# }
-
-# prompt_hg() {
-#   (( $+commands[hg] )) || return
-#   local rev status
-#   if $(hg id >/dev/null 2>&1); then
-#     if $(hg prompt >/dev/null 2>&1); then
-#       if [[ $(hg prompt "{status|unknown}") = "?" ]]; then
-#         # if files are not added
-#         prompt_segment red white
-#         st='±'
-#       elif [[ -n $(hg prompt "{status|modified}") ]]; then
-#         # if any modification
-#         prompt_segment yellow black
-#         st='±'
-#       else
-#         # if working copy is clean
-#         prompt_segment green black
-#       fi
-#       echo -n $(hg prompt "☿ {rev}@{branch}") $st
-#     else
-#       st=""
-#       rev=$(hg id -n 2>/dev/null | sed 's/[^-0-9]//g')
-#       branch=$(hg id -b 2>/dev/null)
-#       if `hg st | grep -q "^\?"`; then
-#         prompt_segment red black
-#         st='±'
-#       elif `hg st | grep -q "^[MA]"`; then
-#         prompt_segment yellow black
-#         st='±'
-#       else
-#         prompt_segment green black
-#       fi
-#       echo -n "☿ $rev@$branch" $st
-#     fi
-#   fi
-# }
-
-# Dir: current working directory
-prompt_dir() {
-  prompt_segment blue black '%~'
 }
 
 prompt_short_dir() {
@@ -200,26 +131,19 @@ prompt_short_dir() {
     prompt_segment blue black $dir
 }
 
-# Virtualenv: current working virtualenv
-prompt_virtualenv() {
-  local virtualenv_path="$VIRTUAL_ENV"
-  if [[ -n $virtualenv_path && -n $VIRTUAL_ENV_DISABLE_PROMPT ]]; then
-    prompt_segment blue black "(`basename $virtualenv_path`)"
-  fi
-}
-
 # Status:
 # - was there an error
 # - am I root
 # - are there background jobs?
 prompt_status() {
   local symbols
-  symbols=()
-  [[ $RETVAL -ne 0 ]] && symbols+="🔥" || symbols+="🥃"
+  symbols="🥃"
+  color=white
+  [[ $RETVAL -ne 0 ]] && symbols="🔥" && color=white
   # [[ $UID -eq 0 ]] && symbols+="%{%F{yellow}%}⚡"
-  [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="%{%F{cyan}%}⚙"
+  # [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="%{%F{cyan}%}⚙"
 
-  [[ -n "$symbols" ]] && prompt_segment black default "$symbols"
+  [[ -n "$symbols" ]] && prompt_segment $color default "$symbols"
 }
 
 prompt_time() {
@@ -229,42 +153,14 @@ prompt_time() {
 ## Main prompt
 build_prompt() {
   RETVAL=$?
+
   prompt_status
   prompt_time
-  # prompt_virtualenv
-
-  # ignore this one because I know who I am
-  # prompt_context
-  # prompt_dir
   prompt_git
   prompt_short_dir
-  # prompt_bzr
-  # prompt_hg
   prompt_end
 }
 
 autoload -U colors; colors
-
-kp() { kubectl_prompt "$@"; }
-kubectl_prompt() {
-  enable=$1
-  if  [[ $enable == "on" ]]; then
-    echo "enabling kubectl prompt"
-    enable_kubectl_prompt
-    return
-  fi
-  echo "disabling kubectl prompt"
-  disable_kubectl_prompt
-}
-
-disable_kubectl_prompt() {
-  RPS1=''
-}
-
-enable_kubectl_prompt() {
-  source ~/env/zsh-kubectl-prompt/kubectl.zsh && RPS1='%{$fg[blue]%}($ZSH_KUBECTL_PROMPT)%{$reset_color%}'
-}
-
-# enable_kubectl_prompt
 
 PROMPT='%{%f%b%k%}$(build_prompt) '

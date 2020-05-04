@@ -3,6 +3,7 @@
 git submodule update --init --recursive
 
 unlink ~/.zshrc
+unlink ~/.zshrc_work
 unlink ~/.vimrc
 unlink ~/.vim
 unlink ~/.bashrc
@@ -14,6 +15,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 ln -s $DIR/.bashrc ~/.bashrc
 ln -s $DIR/.zshrc ~/.zshrc
+ln -s $DIR/.zshrc_work ~/.zshrc_work
 ln -s $DIR/.vimrc ~/.vimrc
 ln -s $DIR/.vim ~/.vim
 ln -s $DIR/.oh-my-zsh ~/.oh-my-zsh

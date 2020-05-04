@@ -12,6 +12,13 @@ fi
 parse_git_branch() {
   git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
 }
+git_current_branch() {
+  git branch | grep \* | cut -d ' ' -f2
+}
+git_track() {
+  git branch -u origin/`git_current_branch`
+}
+alias gt='git_track()'
 short_pwd() {
     local pwd_length=${PROMPT_LEN-25};
     local cur_pwd=$(echo $(pwd) | sed -e "s,^$HOME,~,");
@@ -30,9 +37,6 @@ date_short() {
 }
 date_long() {
     echo "$(date +%A-%H:%M:%S)"
-}
-code() {
-    /Applications/Visual\ Studio\ Code.app/Contents/MacOS/Electron $1 &
 }
 
 # dcstats and dtop have mostly the same output
@@ -108,3 +112,5 @@ export GIT_SSH=/usr/bin/ssh
 if hash chef 2>/dev/null; then
 	eval "$(chef shell-init bash)"
 fi
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
