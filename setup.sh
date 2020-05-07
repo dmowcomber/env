@@ -1,15 +1,20 @@
 #!/usr/bin/env bash
 
-git submodule update --init --recursive
 
-unlink ~/.zshrc
-unlink ~/.zshrc_work
-unlink ~/.vimrc
-unlink ~/.vim
-unlink ~/.bashrc
-unlink ~/.oh-my-zsh
-unlink ~/.gitconfig
-unlink /usr/local/bin/subl
+if ! type git > /dev/null; then
+  git submodule update --init --recursive
+else
+  echo "unable to setup git submodules"
+fi
+
+unlink ~/.zshrc 2>/dev/null || echo "."
+unlink ~/.zshrc_work 2>/dev/null || echo "."
+unlink ~/.vimrc 2>/dev/null || echo "."
+unlink ~/.vim 2>/dev/null || echo "."
+unlink ~/.bashrc 2>/dev/null || echo "."
+unlink ~/.oh-my-zsh 2>/dev/null || echo "."
+unlink ~/.gitconfig 2>/dev/null || echo "."
+unlink /usr/local/bin/subl 2>/dev/null || echo "."
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
