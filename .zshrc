@@ -246,7 +246,7 @@ function powerline_precmd() {
   #   gitmodule="gitlite"
   # fi
 
-  PS1="$($GOPATH/bin/powerline-go -error $exit_code -shell zsh -hostname-only-if-ssh -modules "ssh,time,host,docker,$gitmodule,host,cwd,perms,hg,jobs,exit,root")"
+  PS1="$($GOPATH/bin/powerline-go -error $exit_code -shell zsh -hostname-only-if-ssh -modules "ssh,host,time,docker,$gitmodule,host,cwd,perms,hg,jobs,exit,root")"
 }
 
 function install_powerline_precmd() {
