@@ -33,3 +33,8 @@ ln -s $DIR/.oh-my-zsh ~/.oh-my-zsh
 ln -s $DIR/.gitconfig ~/.gitconfig
 
 echo "done linking dot files"
+echo "bash: $(which bash 2>/dev/null)"
+echo "zsh: $(which zsh 2>/dev/null)"
+echo "git: $(which git 2>/dev/null)"
+echo "go: $(which go 2>/dev/null)"
+echo "powerline-go: $(which powerline-go 2>/dev/null)"
