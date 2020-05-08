@@ -86,4 +86,3 @@ autocmd FileType c,cpp,java,php,ruby,python autocmd BufWritePre <buffer> :%s/\s\
 
 "Don't auto indent when pasting
 set paste
-

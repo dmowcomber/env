@@ -231,6 +231,8 @@ enable_kubectl_prompt() {
 
 # powerline-go (this override the theme set way above)
 function powerline_precmd() {
+  [ -f $GOPATH/bin/powerline-go ] || return
+
   exit_code=$?
   # -modules string
   #     The list of modules to load, separated by ','

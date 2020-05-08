@@ -1,6 +1,3 @@
-[url "git@github.com:"]
-	insteadOf = https://github.com/
-[user]
 [user]
 	name = Dustin Mowcomber
 	email = dustin.mowcomber@sendgrid.com
@@ -23,5 +20,3 @@
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 	required = true
-[url "ssh://git@github.com/sendgrid"]
-	insteadOf = https://github.com/sendgrid
