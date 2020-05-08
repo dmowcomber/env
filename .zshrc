@@ -231,9 +231,11 @@ enable_kubectl_prompt() {
 
 # powerline-go (this override the theme set way above)
 function powerline_precmd() {
+  # capture the exit code before doing anything else
+  exit_code=$?
+
   [ -f $GOPATH/bin/powerline-go ] || return
 
-  exit_code=$?
   # -modules string
   #     The list of modules to load, separated by ','
   #     (valid choices: aws, cwd, docker, docker-context, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)
@@ -243,7 +245,8 @@ function powerline_precmd() {
   # if [ -n "$TMUX" ]; then
   #   gitmodule="gitlite"
   # fi
-  PS1="$($GOPATH/bin/powerline-go -error $exit_code -shell zsh -hostname-only-if-ssh -modules "time,docker,$gitmodule,host,ssh,cwd,perms,hg,jobs,exit,root")"
+
+  PS1="$($GOPATH/bin/powerline-go -error $exit_code -shell zsh -hostname-only-if-ssh -modules "ssh,time,host,docker,$gitmodule,host,cwd,perms,hg,jobs,exit,root")"
 }
 
 function install_powerline_precmd() {
