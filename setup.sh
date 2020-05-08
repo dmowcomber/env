@@ -14,7 +14,6 @@ unlink ~/.vim 2>/dev/null || echo "."
 unlink ~/.bashrc 2>/dev/null || echo "."
 unlink ~/.oh-my-zsh 2>/dev/null || echo "."
 unlink ~/.gitconfig 2>/dev/null || echo "."
-unlink /usr/local/bin/subl 2>/dev/null || echo "."
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
@@ -25,4 +24,3 @@ ln -s $DIR/.vimrc ~/.vimrc
 ln -s $DIR/.vim ~/.vim
 ln -s $DIR/.oh-my-zsh ~/.oh-my-zsh
 ln -s $DIR/.gitconfig ~/.gitconfig
-ln -s /Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl /usr/local/bin/subl
