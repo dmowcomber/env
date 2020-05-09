@@ -240,13 +240,7 @@ function powerline_precmd() {
   #     The list of modules to load, separated by ','
   #     (valid choices: aws, cwd, docker, docker-context, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)
   #     (default "venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root")
-
-  gitmodule="git"
-  # if [ -n "$TMUX" ]; then
-  #   gitmodule="gitlite"
-  # fi
-
-  PS1="$($GOPATH/bin/powerline-go -error $exit_code -shell zsh -hostname-only-if-ssh -modules "ssh,host,time,docker,$gitmodule,host,cwd,perms,hg,jobs,exit,root")"
+  PS1="$($GOPATH/bin/powerline-go -error $exit_code -shell zsh -hostname-only-if-ssh -modules "ssh,host,time,docker,git,cwd,perms,hg,jobs,exit,root")"
 }
 
 function install_powerline_precmd() {
