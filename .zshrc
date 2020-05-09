@@ -133,7 +133,7 @@ zstyle ':completion:*' special-dirs true
 
 setopt globdots
 alias ls='ls -a'
-alias ll='ls -laG'
+alias ll='ls -laG --color'
 alias goversions='brew search /^go\(@.*\)$/'
 
 alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
