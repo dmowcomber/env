@@ -38,3 +38,22 @@ echo "zsh: $(which zsh 2>/dev/null)"
 echo "git: $(which git 2>/dev/null)"
 echo "go: $(which go 2>/dev/null)"
 echo "powerline-go: $(which powerline-go 2>/dev/null)"
+echo "brew: $(which brew 2>/dev/null)"
+
+case `uname` in
+  Darwin)
+    # (osx/macos)
+    if type brew > /dev/null; then
+      if ! type gdate > /dev/null; then
+        echo "installing coreutils to get gnu binaries (like gdate)"
+        brew install coreutils
+      fi
+    else
+      echo "Skipping install of 'coreutils' because brew is not installed"
+    fi
+  ;;
+  Linux)
+    # ...
+    echo
+  ;;
+esac
