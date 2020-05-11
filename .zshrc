@@ -133,7 +133,14 @@ zstyle ':completion:*' special-dirs true
 
 setopt globdots
 alias ls='ls -a'
-alias ll='ls -laG --color'
+case `uname` in
+  Darwin) # (osx/macos)
+    alias ll='ls -laG'
+  ;;
+  Linux)
+    alias ll='ls -la --color'
+  ;;
+esac
 alias goversions='brew search /^go\(@.*\)$/'
 
 alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
