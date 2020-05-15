@@ -62,6 +62,11 @@ setupMacOS() {
     brew install coreutils
   fi
 
+  if ! type fzf > /dev/null; then
+    echo "installing fzf"
+    brew install fzf
+  fi
+
   if ! type kubectl > /dev/null; then
     echo "installing kubectl"
     brew install kubernetes-cli
@@ -75,7 +80,8 @@ setupMacOS() {
 }
 
 setupLinux() {
-
+  # TODO
+  return
 }
 
 main
