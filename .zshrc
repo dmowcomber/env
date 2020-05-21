@@ -45,7 +45,7 @@ kg() {
    appSelector="app=$2"
    if  [[ -z $1 ]]; then
      echo "must specify resource. example: kg pods"
-     exit 1
+     return
    fi
    if  [[ -z $2 ]]; then
      appSelector=""
