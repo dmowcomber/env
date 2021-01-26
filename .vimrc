@@ -2,6 +2,7 @@ set nocompatible              " be iMproved, required
 filetype off                  " required
 
 au BufWritePost *.go !gofmt -w %
+let g:go_fmt_command = "goimports"
 
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
