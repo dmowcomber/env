@@ -81,8 +81,8 @@ setupMacOS() {
 
 setupLinux() {
   sudo apt-get install -y fonts-powerline
-
-  # TODO: add more linux steps
+  sudo apt-get install -y zsh
+  sudo chsh `whoami` -s `which zsh`
 }
 
 main

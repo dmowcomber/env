@@ -69,7 +69,7 @@ deploy() {
 }
 
 export CLICOLOR=1
-export GREP_OPTIONS='--color=always'
+# export GREP_OPTIONS='--color=always'
 export GOPATH="$HOME/go"
 export GOBIN="$GOPATH/bin"
 
