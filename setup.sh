@@ -80,8 +80,9 @@ setupMacOS() {
 }
 
 setupLinux() {
-  # TODO
-  return
+  sudo apt-get install -y fonts-powerline
+
+  # TODO: add more linux steps
 }
 
 main
