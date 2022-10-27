@@ -291,7 +291,7 @@ if [ "$TERM" != "linux" ]; then
 fi
 # eval "$(chef shell-init zsh)"
 
-if uname -a |grep steamdeck; then
+if uname -a |grep -q steamdeck; then
   # steamos path to vscode
   export PATH=$PATH:~/applications/VSCode-linux-x64/bin/
 
