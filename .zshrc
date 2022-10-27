@@ -135,7 +135,9 @@ anypod() {
 }
 
 alias atom='echo running atom with go mod disabled because it slows down go to definition; echo GO111MODULE=off; GO111MODULE=off /Applications/Atom.app/Contents/MacOS/Atom'
-alias code='/Applications/Visual\ Studio\ Code.app/Contents/MacOS/Electron'
+if [ -f /Applications/Visual\ Studio\ Code.app/Contents/MacOS/Electron ]; then
+  alias code='/Applications/Visual\ Studio\ Code.app/Contents/MacOS/Electron'
+fi
 # jq . sometimes adds extra indentation. the following fixes that somehow
 alias jq='jq -c .| jq'
 
