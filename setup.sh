@@ -8,7 +8,7 @@ main() {
   fi
 
   if type go > /dev/null && [ ! -f $GOPATH/bin/powerline-go ]; then
-    go get github.com/dmowcomber/powerline-go
+    go install github.com/dmowcomber/powerline-go@latest
   else
     echo "golang is not installed. skipping install of powerline-go"
   fi
@@ -40,14 +40,19 @@ main() {
   echo "powerline-go: $(which powerline-go 2>/dev/null)"
   echo "brew: $(which brew 2>/dev/null)"
 
-  case `uname` in
-    Darwin)
-      setupMacOS
-    ;;
-    Linux)
-      setupLinux
-    ;;
-  esac
+
+  if uname -a |grep steamdeck
+    then echo "SteamDeck: skipping remaining steps"
+  else 
+    case `uname` in
+      Darwin)
+        setupMacOS
+      ;;
+      Linux)
+        setupLinux
+      ;;
+    esac
+  fi
 }
 
 setupMacOS() {

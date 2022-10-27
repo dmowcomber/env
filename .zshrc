@@ -160,7 +160,7 @@ DISABLE_AUTO_TITLE="true"
 # precmd will run before the prompt is displayed
 precmd() {
   # set the prompt title
-  echo -ne "\033]0;$(hostname):${PWD##*/}/$(parse_git_branch) $(date_long)\007"
+  echo -ne "\033]0;:${PWD##*/}/$(parse_git_branch) $(date_long)\007"
 }
 
 date_long() {
@@ -204,7 +204,7 @@ SAVEHIST=10000
 setopt appendhistory
 
 export CLICOLOR=1
-export GREP_OPTIONS='--color=always'
+alias grep='grep --color'
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
@@ -274,3 +274,9 @@ fi
 # if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ] && [ -z "$REFRESH" ]; then
 #   exec tmux
 # fi
+
+
+# steamdeck distrobox/podman setup
+export PATH=$HOME/.local/bin:$PATH
+export PATH=$HOME/.local/podman/bin:$PATH
+xhost +si:localuser:$USER # enable distrobox gui apps
