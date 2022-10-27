@@ -40,7 +40,6 @@ main() {
   echo "powerline-go: $(which powerline-go 2>/dev/null)"
   echo "brew: $(which brew 2>/dev/null)"
 
-
   if uname -a |grep steamdeck
     then echo "SteamDeck: skipping remaining steps"
   else 
@@ -70,6 +69,7 @@ setupMacOS() {
   if ! type fzf > /dev/null; then
     echo "installing fzf"
     brew install fzf
+    $(brew --prefix)/opt/fzf/install
   fi
 
   if ! type kubectl > /dev/null; then
