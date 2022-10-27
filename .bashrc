@@ -111,5 +111,9 @@ fi
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
-# steamos path to vscode
-export PATH=$PATH:~/applications/VSCode-linux-x64/bin/
+export GIT_TERMINAL_PROMPT=1
+
+if uname -a |grep -q steamdeck; then
+  # steamos path to vscode
+  export PATH=$PATH:~/applications/VSCode-linux-x64/bin/
+fi

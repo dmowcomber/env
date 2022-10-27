@@ -23,7 +23,9 @@ refresh() {
 }
 
 kexec() {
-  kubectl exec -it `anypod -a $1 -s $2` -- sh
+  podApp=$1
+  podSearch=$2
+  kubectl exec -it `anypod -a $podApp -s $podSearch` -- sh
 }
 
 anypodUsage() {
@@ -37,12 +39,18 @@ dcrmup() {
 	dc kill $service && dc rm -f $service && dc up -d --no-deps $service
 }
 
+# fix watch command so it has aliases, functions, etc.
+alias watch='watch ". ~/.zshrc 2>/dev/null; $@"'
+
+alias jd='afplay ~/jobs-done.mp3'
+
 kgp() { kg pods $@; }
 kgd() { kg deployments $@; }
 
 kg() {
    resource=$1
    appSelector="app=$2"
+   remainingArgs=${@:3}
    if  [[ -z $1 ]]; then
      echo "must specify resource. example: kg pods"
      return
@@ -51,7 +59,8 @@ kg() {
      appSelector=""
    fi
 
-   kubectl get $resource --selector=$appSelector
+   echo kubectl get $resource --selector=$appSelector $remainingArgs
+   kubectl get $resource --selector=$appSelector $remainingArgs
 }
 
 pv() { kgpv "$@"; }
@@ -126,6 +135,7 @@ anypod() {
 }
 
 alias atom='echo running atom with go mod disabled because it slows down go to definition; echo GO111MODULE=off; GO111MODULE=off /Applications/Atom.app/Contents/MacOS/Atom'
+alias code='/Applications/Visual\ Studio\ Code.app/Contents/MacOS/Electron'
 # jq . sometimes adds extra indentation. the following fixes that somehow
 alias jq='jq -c .| jq'
 
@@ -143,7 +153,9 @@ case `uname` in
 esac
 alias goversions='brew search /^go\(@.*\)$/'
 
-alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
+chrome() {
+  /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome "$@"
+}
 alias dc='docker-compose'
 alias bs='git branch-select'
 
@@ -192,9 +204,12 @@ export GOPATH="$HOME/go"
 export GOBIN="$GOPATH/bin"
 export GO111MODULE='auto'
 
-PATH="$HOME/Library/Python/3.6/bin:$HOME/.rbenv/shims:$HOME/.rbenv/bin:$HOME/.gem/ruby/2.1.0/bin:/Library/Frameworks/Python.framework/Versions/2.7/bin:${GOPATH}/bin:/Applications/Postgres.app/Contents/Versions/9.5/bin:${PATH}:$HOME/.gem/ruby/2.0.0/bin"
+PATH="$HOME/Library/Python/3.7/bin:$HOME/.rbenv/shims:$HOME/.rbenv/bin:$HOME/.gem/ruby/2.1.0/bin:/Library/Frameworks/Python.framework/Versions/2.7/bin:${GOPATH}/bin:/Applications/Postgres.app/Contents/Versions/9.5/bin:${PATH}:$HOME/.gem/ruby/2.0.0/bin"
+PATH="$HOME/Library/Python/2.7/bin:${PATH}"
+PATH="/usr/local/sbin:$PATH"
 # add flamegraph script for pprof flame graphs!
 PATH="$GOPATH/go/src/github.com/uber/go-torch/FlameGraph:/usr/local/opt/go/libexec/bin:$PATH"
+PATH="$GOPATH/bin/:$PATH"
 export PATH
 
 unsetopt share_history
@@ -267,14 +282,21 @@ function install_powerline_precmd() {
   precmd_functions+=(powerline_precmd)
 }
 
+function powerInput() {
+	system_profiler SPPowerDataType | sed -n '/AC Charger Information/,/Power Events/p'
+}
+
 if [ "$TERM" != "linux" ]; then
     install_powerline_precmd
 fi
+# eval "$(chef shell-init zsh)"
 
-# steamos path to vscode
-export PATH=$PATH:~/applications/VSCode-linux-x64/bin/
+if uname -a |grep -q steamdeck; then
+  # steamos path to vscode
+  export PATH=$PATH:~/applications/VSCode-linux-x64/bin/
 
-# steamdeck distrobox/podman setup
-export PATH=$HOME/.local/bin:$PATH
-export PATH=$HOME/.local/podman/bin:$PATH
-xhost +si:localuser:$USER # enable distrobox gui apps
+  # steamdeck distrobox/podman setup
+  export PATH=$HOME/.local/bin:$PATH
+  export PATH=$HOME/.local/podman/bin:$PATH
+  xhost +si:localuser:$USER # enable distrobox gui apps
+fi
