@@ -271,10 +271,8 @@ if [ "$TERM" != "linux" ]; then
     install_powerline_precmd
 fi
 
-# if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ] && [ -z "$REFRESH" ]; then
-#   exec tmux
-# fi
-
+# steamos path to vscode
+export PATH=$PATH:~/applications/VSCode-linux-x64/bin/
 
 # steamdeck distrobox/podman setup
 export PATH=$HOME/.local/bin:$PATH

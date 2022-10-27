@@ -110,3 +110,6 @@ if hash chef 2>/dev/null; then
 fi
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+# steamos path to vscode
+export PATH=$PATH:~/applications/VSCode-linux-x64/bin/
