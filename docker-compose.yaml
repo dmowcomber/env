@@ -1,0 +1,7 @@
+version: "3.8"
+services:
+  env:
+    build: .
+    volumes:
+      - .:/root/env
+      - ../repos:/root/repos
