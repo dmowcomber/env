@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION="1.19.5"
+VERSION="1.21.5"
 OS="$(uname -s)"
 ARCH="$(uname -m)"
 
@@ -42,5 +42,5 @@ FILE="go${VERSION}.${PLATFORM}.tar.gz"
 wget -c https://go.dev/dl/${FILE}
 sudo rm -rf /usr/local/go
 sudo tar -C /usr/local -xzf ${FILE}
-sudo chown dustin:dustin /usr/local/go -R
+sudo chown $(whoami):$(whoami) /usr/local/go -R
 
