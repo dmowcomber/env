@@ -202,16 +202,16 @@ git_push_upstream() {
 alias gpu='git_push_upstream'
 alias dockerips="docker ps -q | xargs -n 1 docker inspect --format '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}} {{ .Name }}' | sed 's/ \// /'"
 
-export GOPATH="$HOME/go"
-export GOBIN="$GOPATH/bin"
+export GOBIN="/usr/local/go/bin"
+if [ -f "$HOME/go/bin" ]; then
+  export GOBIN="$HOME/go/bin"
+fi
 export GO111MODULE='auto'
+export PATH="/usr/local/go/bin:$HOME/go/bin/:$PATH"
 
 PATH="$HOME/Library/Python/3.7/bin:$HOME/.rbenv/shims:$HOME/.rbenv/bin:$HOME/.gem/ruby/2.1.0/bin:/Library/Frameworks/Python.framework/Versions/2.7/bin:${GOPATH}/bin:/Applications/Postgres.app/Contents/Versions/9.5/bin:${PATH}:$HOME/.gem/ruby/2.0.0/bin"
 PATH="$HOME/Library/Python/2.7/bin:${PATH}"
 PATH="/usr/local/sbin:$PATH"
-# add flamegraph script for pprof flame graphs!
-PATH="$GOPATH/go/src/github.com/uber/go-torch/FlameGraph:/usr/local/opt/go/libexec/bin:$PATH"
-PATH="$GOPATH/bin/:$PATH"
 export PATH
 
 unsetopt share_history
@@ -258,14 +258,16 @@ function powerline_precmd() {
   # capture the exit code before doing anything else
   exit_code=$?
 
-  PS1="$($GOPATH/bin/powerline-go -error $exit_code -shell zsh \
-    -modules "ssh,host,time,docker,git,cwd,perms,hg,jobs,exit,root" \
-  )"
-
-
-  if [ -f $GOPATH/bin/powerline-go ]; then
-    PS1="$($GOPATH/bin/powerline-go -error $exit_code -shell zsh -hostname-only-if-ssh -modules "ssh,host,time,docker,$gitmodule,cwd,perms,hg,jobs,exit,root")"
+  
+  # PS1="$($GOPATH/bin/powerline-go -error $exit_code -shell zsh \
+  #   -modules "ssh,host,time,docker,git,cwd,perms,hg,jobs,exit,root" \
+  # )"
+  if ! which powerline-go > /dev/null; then
+    return
   fi
+
+
+  PS1="$(powerline-go -error $exit_code -shell zsh -hostname-only-if-ssh -modules "ssh,host,time,docker,$gitmodule,cwd,perms,hg,jobs,exit,root")"
 }
 
 function install_powerline_precmd() {

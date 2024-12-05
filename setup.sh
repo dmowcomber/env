@@ -7,12 +7,6 @@ main() {
     echo "git is not installed. skipping git submodules"
   fi
 
-  if type go > /dev/null && [ ! -f $GOPATH/bin/powerline-go ]; then
-    go install github.com/dmowcomber/powerline-go@latest
-  else
-    echo "golang is not installed. skipping install of powerline-go"
-  fi
-
   echo "linking dot files"
   unlink ~/.zshrc 2>/dev/null || echo "."
   unlink ~/.zshrc_work 2>/dev/null || echo "."
@@ -52,6 +46,12 @@ main() {
       ;;
     esac
   fi
+
+  if type go > /dev/null && [ ! -f $GOPATH/bin/powerline-go ]; then
+    go install github.com/dmowcomber/powerline-go@latest
+  else
+    echo "golang is not installed. skipping install of powerline-go"
+  fi
 }
 
 setupMacOS() {
@@ -85,9 +85,11 @@ setupMacOS() {
 }
 
 setupLinux() {
-  sudo apt-get install -y fonts-powerline
-  sudo apt-get install -y zsh
+  sudo apt install -y fonts-powerline
+  sudo apt install -y zsh
+  sudo apt install -y vim
   sudo chsh `whoami` -s `which zsh`
+  ./linux/install-go.sh
 }
 
 main
