@@ -1,6 +1,8 @@
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 
+export GOPATH="/usr/local/go"
+
 # ZSH_THEME="agnoster" # not using a theme anymore.. using powerline-go https://github.com/dmowcomber/powerline-go
 
 plugins=(git kubectl)
@@ -138,6 +140,10 @@ alias atom='echo running atom with go mod disabled because it slows down go to d
 if [ -f /Applications/Visual\ Studio\ Code.app/Contents/MacOS/Electron ]; then
   alias code='/Applications/Visual\ Studio\ Code.app/Contents/MacOS/Electron'
 fi
+if [ -f /Applications/VSCodium.app/Contents/Resources/app/bin/codium ]; then
+  alias codium='/Applications/VSCodium.app/Contents/Resources/app/bin/codium'
+  alias code='/Applications/VSCodium.app/Contents/Resources/app/bin/codium'
+fi
 if [ -f /usr/local/bin/codium ]; then
 	alias code='/usr/local/bin/codium'
 fi
@@ -175,10 +181,10 @@ alias k='kubectl'
 DISABLE_AUTO_TITLE="true"
 
 # precmd will run before the prompt is displayed
-precmd() {
-  # set the prompt title
-  echo -ne "\033]0;:${PWD##*/}/$(parse_git_branch) $(date_long)\007"
-}
+# precmd() {
+#   # set the prompt title
+#   echo -ne "\033]0;:${PWD##*/}/$(parse_git_branch) $(date_long)\007"
+# }
 
 date_long() {
     echo "$(date +%A-%H:%M:%S)"
