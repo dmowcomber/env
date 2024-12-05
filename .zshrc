@@ -138,6 +138,9 @@ alias atom='echo running atom with go mod disabled because it slows down go to d
 if [ -f /Applications/Visual\ Studio\ Code.app/Contents/MacOS/Electron ]; then
   alias code='/Applications/Visual\ Studio\ Code.app/Contents/MacOS/Electron'
 fi
+if [ -f /usr/local/bin/codium ]; then
+	alias code='/usr/local/bin/codium'
+fi
 # jq . sometimes adds extra indentation. the following fixes that somehow
 alias jq='jq -c .| jq'
 
@@ -156,7 +159,7 @@ esac
 alias goversions='brew search /^go\(@.*\)$/'
 
 chrome() {
-  /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome "$@"
+  open -a "Google Chrome" "$@"
 }
 alias dc='docker-compose'
 alias bs='git branch-select'
