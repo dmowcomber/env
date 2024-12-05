@@ -1,4 +1,4 @@
-FROM golang:1.13.10-alpine3.11
+FROM golang:1.20.4-buster
 
 ENV \
   GOPATH=/root/go
@@ -6,7 +6,8 @@ ENV \
 WORKDIR /root/env
 COPY . /root/env
 
-RUN apk add git zsh bash vim
-RUN go get github.com/dmowcomber/powerline-go
+RUN apt update -y
+RUN apt install -y git zsh bash vim sudo
+RUN go install github.com/dmowcomber/powerline-go@latest
 RUN /root/env/setup.sh
 CMD zsh

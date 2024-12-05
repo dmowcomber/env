@@ -259,19 +259,13 @@ function powerline_precmd() {
   exit_code=$?
 
   
+  # PS1="$($GOPATH/bin/powerline-go -error $exit_code -shell zsh \
+  #   -modules "ssh,host,time,docker,git,cwd,perms,hg,jobs,exit,root" \
+  # )"
   if ! which powerline-go > /dev/null; then
     return
   fi
 
-  # -modules string
-  #     The list of modules to load, separated by ','
-  #     (valid choices: aws, cwd, docker, docker-context, dotenv, duration, exit, git, gitlite, hg, host, jobs, kube, load, newline, nix-shell, node, perlbrew, perms, plenv, root, shell-var, shenv, ssh, svn, termtitle, terraform-workspace, time, user, venv, vgo)
-  #     (default "venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root")
-
-  gitmodule="git"
-  # if [ -n "$TMUX" ]; then
-  #   gitmodule="gitlite"
-  # fi
 
   PS1="$(powerline-go -error $exit_code -shell zsh -hostname-only-if-ssh -modules "ssh,host,time,docker,$gitmodule,cwd,perms,hg,jobs,exit,root")"
 }
@@ -289,9 +283,10 @@ function powerInput() {
 	system_profiler SPPowerDataType | sed -n '/AC Charger Information/,/Power Events/p'
 }
 
-if [ "$TERM" != "linux" ]; then
+if [ "$TERM" != "linux" ] && [ -f "$GOPATH/bin/powerline-go" ]; then
     install_powerline_precmd
 fi
+
 # eval "$(chef shell-init zsh)"
 
 if uname -a |grep -q steamdeck; then
