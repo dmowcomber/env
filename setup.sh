@@ -82,6 +82,8 @@ setupMacOS() {
     brew tap blendle/blendle
     brew install kns
   fi
+
+  brew install --cask font-sauce-code-pro-nerd-font
 }
 
 setupLinux() {
