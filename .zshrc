@@ -17,7 +17,6 @@ fi
 if [ -f ~/.bashrc_secret ]; then
     . ~/.bashrc_secret
 fi
-
 r() { refresh; }
 refresh() {
     REFRESH=true
@@ -186,22 +185,10 @@ DISABLE_AUTO_TITLE="true"
 #   echo -ne "\033]0;:${PWD##*/}/$(parse_git_branch) $(date_long)\007"
 # }
 
-date_long() {
-    echo "$(date +%A-%H:%M:%S)"
-}
 
-parse_git_branch() {
-	git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
-}
 git_current_branch() {
 	git branch | grep \* | cut -d ' ' -f2
 }
-git_track() {
-  git branch -vv | grep `git_current_branch`
-  git branch -u origin/`git_current_branch`
-  git branch -vv | grep `git_current_branch`
-}
-alias gt='git_track'
 
 git_push_upstream() {
   git branch -vv | grep `git_current_branch`
@@ -218,11 +205,13 @@ fi
 export GO111MODULE='auto'
 export PATH="/usr/local/go/bin:$HOME/go/bin/:$PATH"
 
-PATH="$HOME/Library/Python/3.7/bin:$HOME/.rbenv/shims:$HOME/.rbenv/bin:$HOME/.gem/ruby/2.1.0/bin:/Library/Frameworks/Python.framework/Versions/2.7/bin:${GOPATH}/bin:/Applications/Postgres.app/Contents/Versions/9.5/bin:${PATH}:$HOME/.gem/ruby/2.0.0/bin"
 PATH="$HOME/Library/Python/2.7/bin:${PATH}"
 PATH="/usr/local/sbin:$PATH"
+PATH="/usr/local/opt/go/libexec/bin:$PATH"
+PATH="$GOPATH/bin/:$PATH"
 export PATH
 
+export PATH=/usr/local/Homebrew/bin:/usr/local/bin:$PATH
 unsetopt share_history
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
@@ -237,47 +226,19 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 # fix issue with missing carriage return
 stty sane
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-
-kp() { kubectl_prompt "$@"; }
-kubectl_prompt() {
-  enable=$1
-  if  [[ $enable == "on" ]]; then
-    echo "enabling kubectl prompt"
-    enable_kubectl_prompt
-    return
-  fi
-  echo "disabling kubectl prompt"
-  disable_kubectl_prompt
-}
-
-disable_kubectl_prompt() {
-  RPS1=''
-}
-
-enable_kubectl_prompt() {
-  source ~/env/zsh-kubectl-prompt/kubectl.zsh && RPS1='%{$fg[blue]%}($ZSH_KUBECTL_PROMPT)%{$reset_color%}'
-}
-
-# enable_kubectl_prompt
+[ -f ~/.fzf.zsh ] && time source ~/.fzf.zsh
 
 # powerline-go (this override the theme set way above)
 function powerline_precmd() {
   # capture the exit code before doing anything else
   exit_code=$?
 
-  
-  # PS1="$($GOPATH/bin/powerline-go -error $exit_code -shell zsh \
-  #   -modules "ssh,host,time,docker,git,cwd,perms,hg,jobs,exit,root" \
-  # )"
-  if ! which powerline-go > /dev/null; then
-    return
-  fi
-
-
-  PS1="$(powerline-go -error $exit_code -shell zsh -hostname-only-if-ssh -modules "ssh,host,time,docker,$gitmodule,cwd,perms,hg,jobs,exit,root")"
+  PS1="$($GOPATH/bin/powerline-go -error $exit_code -shell zsh \
+    -modules "ssh,time,docker,git,cwd,perms,hg,jobs,exit,root" \
+  )"
 }
+
+
 
 function install_powerline_precmd() {
   for s in "${precmd_functions[@]}"; do
@@ -295,8 +256,6 @@ function powerInput() {
 if [ "$TERM" != "linux" ] && [ -f "$GOPATH/bin/powerline-go" ]; then
     install_powerline_precmd
 fi
-
-# eval "$(chef shell-init zsh)"
 
 if uname -a |grep -q steamdeck; then
   # steamos path to vscode
