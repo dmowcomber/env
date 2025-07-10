@@ -198,6 +198,13 @@ git_push_upstream() {
   git push -u origin `git_current_branch`
   git branch -vv | grep `git_current_branch`
 }
+
+pr() {
+  git_push_upstream
+  gitURL=$(git config --get remote.origin.url | sed -e 's/:/\//g'| sed -e 's/ssh\/\/\///g'| sed -e 's/git@/https:\/\//g' | sed -e 's/\.git//g')
+  chrome ${gitURL}/compare/$(headBranch)...`git branch | grep \* | cut -d " " -f2`
+}
+
 alias gpu='git_push_upstream'
 alias dockerips="docker ps -q | xargs -n 1 docker inspect --format '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}} {{ .Name }}' | sed 's/ \// /'"
 
