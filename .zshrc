@@ -269,3 +269,7 @@ if uname -a |grep -q steamdeck; then
   export PATH=$HOME/.local/podman/bin:$PATH
   xhost +si:localuser:$USER # enable distrobox gui apps
 fi
+
+function fixChromeNavigation() {
+    sudo sed -i 's!Exec=/usr/bin/google-chrome-stable %U!Exec=/usr/bin/google-chrome-stable --enable-features=TouchpadOverscrollHistoryNavigation %U!g' /usr/share/applications/google-chrome.desktop
+}
